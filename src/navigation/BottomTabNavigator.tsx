@@ -4,10 +4,35 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { SearchScreen } from "../screens/SearchScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
 import { HomeIcon, SearchIcon, ProfileIcon } from "../components/Icons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { MovieDetailScreen } from "../screens/MovieDetailScreen";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export const BottomTabNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="MainTabs"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MovieDetail"
+        component={MovieDetailScreen}
+        options={{
+          headerTransparent: true,
+          headerTitle: "",
+          headerBackTitle: "",
+          headerTintColor: "#fff",
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
