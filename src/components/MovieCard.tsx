@@ -113,7 +113,11 @@ export const MovieCard = React.memo(({ movie, onPress }: MovieCardProps) => {
   };
 
   return (
-    <Card onPress={() => onPress(movie)} activeOpacity={0.8}>
+    <Card
+      onPress={() => onPress(movie)}
+      activeOpacity={0.8}
+      testID="movie-card"
+    >
       <Poster source={{ uri: movie.poster_path }} resizeMode="cover" />
       <InfoContainer>
         <Title numberOfLines={2}>{movie.original_title}</Title>
