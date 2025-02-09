@@ -10,6 +10,7 @@ import { MovieCard } from "../components/MovieCard";
 import { getMovies } from "../services/movieService";
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useMovies } from "../context/MoviesContext";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -19,6 +20,7 @@ type RootStackParamList = {
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export const HomeScreen = ({ navigation }: Props) => {
+  const { setMovies: setContextMovies } = useMovies();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -29,6 +31,7 @@ export const HomeScreen = ({ navigation }: Props) => {
       const response = await getMovies(pageNumber);
       if (pageNumber === 1) {
         setMovies(response.data);
+        setContextMovies(response.data);
       } else {
         setMovies((prev) => [...prev, ...response.data]);
       }

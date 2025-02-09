@@ -1,6 +1,76 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import styled from "styled-components/native";
 import type { Movie } from "../types/movie";
+import { useMovies } from "../context/MoviesContext";
+
+const Card = styled.TouchableOpacity`
+  flex-direction: row;
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.borderRadius.md}px;
+  margin: ${({ theme }) => theme.spacing.md}px
+    ${({ theme }) => theme.spacing.lg}px;
+  padding: ${({ theme }) => theme.spacing.md}px;
+  ${({ theme }) => theme.shadows.default}
+`;
+
+const Poster = styled.Image`
+  width: 100px;
+  height: 150px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm}px;
+`;
+
+const InfoContainer = styled.View`
+  flex: 1;
+  margin-left: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const Title = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const ReleaseDate = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-top: ${({ theme }) => theme.spacing.xs}px;
+`;
+
+const RatingContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: ${({ theme }) => theme.spacing.xs}px;
+`;
+
+const Rating = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: bold;
+`;
+
+const Votes = styled.Text`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-left: ${({ theme }) => theme.spacing.xs}px;
+`;
+
+const Overview = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-top: ${({ theme }) => theme.spacing.sm}px;
+  line-height: 20px;
+`;
+
+const FavoriteButton = styled.TouchableOpacity`
+  position: absolute;
+  top: ${({ theme }) => theme.spacing.sm}px;
+  right: ${({ theme }) => theme.spacing.sm}px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface MovieCardProps {
   movie: Movie;
@@ -8,91 +78,32 @@ interface MovieCardProps {
 }
 
 export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
+  const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
+  const isMovieFavorite = isFavorite(movie.id);
+
+  const handleFavoritePress = async () => {
+    if (isMovieFavorite) {
+      await removeFromFavorites(movie.id);
+    } else {
+      await addToFavorites(movie);
+    }
+  };
+
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => onPress(movie)}
-      activeOpacity={0.8}
-    >
-      <Image
-        source={{ uri: movie.poster_path }}
-        style={styles.poster}
-        resizeMode="cover"
-      />
-      <View style={styles.infoContainer}>
-        <Text style={styles.title} numberOfLines={2}>
-          {movie.original_title}
-        </Text>
-        <Text style={styles.releaseDate}>
-          {new Date(movie.release_date).getFullYear()}
-        </Text>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.rating}>⭐️ {movie.vote_average.toFixed(1)}</Text>
-          <Text style={styles.votes}>({movie.vote_count} votes)</Text>
-        </View>
-        <Text style={styles.overview} numberOfLines={3}>
-          {movie.overview}
-        </Text>
-      </View>
-    </TouchableOpacity>
+    <Card onPress={() => onPress(movie)} activeOpacity={0.8}>
+      <Poster source={{ uri: movie.poster_path }} resizeMode="cover" />
+      <InfoContainer>
+        <Title numberOfLines={2}>{movie.original_title}</Title>
+        <ReleaseDate>{new Date(movie.release_date).getFullYear()}</ReleaseDate>
+        <RatingContainer>
+          <Rating>⭐️ {movie.vote_average.toFixed(1)}</Rating>
+          <Votes>({movie.vote_count} votes)</Votes>
+        </RatingContainer>
+        <Overview numberOfLines={3}>{movie.overview}</Overview>
+      </InfoContainer>
+      <FavoriteButton onPress={handleFavoritePress}>
+        <Title>{isMovieFavorite ? "❤️" : "🤍"}</Title>
+      </FavoriteButton>
+    </Card>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 12,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  poster: {
-    width: 100,
-    height: 150,
-    borderRadius: 8,
-  },
-  infoContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-  },
-  releaseDate: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 4,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 4,
-  },
-  rating: {
-    fontSize: 14,
-    color: "#f5c518",
-    fontWeight: "bold",
-  },
-  votes: {
-    fontSize: 12,
-    color: "#666",
-    marginLeft: 4,
-  },
-  overview: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 8,
-    lineHeight: 20,
-  },
-});

@@ -6,9 +6,12 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  Share,
+  TouchableOpacity,
 } from "react-native";
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useMovies } from "../context/MoviesContext";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -19,6 +22,36 @@ type Props = NativeStackScreenProps<RootStackParamList, "MovieDetail">;
 
 export const MovieDetailScreen = ({ route }: Props) => {
   const { movie } = route.params;
+  const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
+  const isMovieFavorite = isFavorite(movie.id);
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share(
+        {
+          title: movie.original_title,
+          message: `Check out this movie: ${movie.original_title}\n\n${movie.overview}\n\nRating: ⭐️ ${movie.vote_average}/10`,
+        },
+        {
+          dialogTitle: `Share ${movie.original_title}`,
+          subject: `Check out this movie: ${movie.original_title}`,
+          tintColor: "#f5c518",
+        }
+      );
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log(`Shared via ${result.activityType}`);
+        } else {
+          console.log("Shared successfully");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share was dismissed");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -28,7 +61,30 @@ export const MovieDetailScreen = ({ route }: Props) => {
         resizeMode="cover"
       />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{movie.original_title}</Text>
+        <View style={styles.headerContainer}>
+          <Text style={styles.title}>{movie.original_title}</Text>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
+              <Text style={styles.actionButtonIcon}>📤</Text>
+              <Text style={styles.actionButtonText}>Share</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() =>
+                isMovieFavorite
+                  ? removeFromFavorites(movie.id)
+                  : addToFavorites(movie)
+              }
+            >
+              <Text style={styles.actionButtonIcon}>
+                {isMovieFavorite ? "❤️" : "🤍"}
+              </Text>
+              <Text style={styles.actionButtonText}>
+                {isMovieFavorite ? "Favorited" : "Add to Favorites"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         <View style={styles.ratingContainer}>
           <Text style={styles.rating}>⭐️ {movie.vote_average.toFixed(1)}</Text>
           <Text style={styles.votes}>({movie.vote_count} votes)</Text>
@@ -140,5 +196,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#666",
     textAlign: "center",
+  },
+  headerContainer: {
+    marginBottom: 16,
+  },
+  actionButtons: {
+    flexDirection: "row",
+    marginTop: 12,
+    gap: 12,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#f5f5f5",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  actionButtonIcon: {
+    fontSize: 18,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    color: "#1a1a1a",
+    fontWeight: "500",
   },
 });
