@@ -19,8 +19,29 @@ const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
 `;
 
-const Title = styled.Text`
+const ProfileCard = styled.View`
+  padding: ${({ theme }) => theme.spacing.lg}px;
+  background-color: ${({ theme }) => theme.colors.card};
+  margin: ${({ theme }) => theme.spacing.lg}px;
+  border-radius: ${({ theme }) => theme.borderRadius.lg}px;
+  align-items: center;
+`;
+
+const ProfileName = styled.Text`
   font-size: 24px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.xs}px;
+`;
+
+const ProfileRole = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  text-align: center;
+`;
+
+const SectionTitle = styled.Text`
+  font-size: 20px;
   font-weight: bold;
   padding: ${({ theme }) => theme.spacing.lg}px;
   color: ${({ theme }) => theme.colors.text.primary};
@@ -50,7 +71,11 @@ export const ProfileScreen = ({ navigation }: Props) => {
 
   return (
     <Container>
-      <Title>Favorite Movies</Title>
+      <ProfileCard>
+        <ProfileName>Abdullah NUR</ProfileName>
+        <ProfileRole>Etenra Technology{"\n"}React Native Developer</ProfileRole>
+      </ProfileCard>
+      <SectionTitle>Favorite Movies</SectionTitle>
       {favoriteMovies.length === 0 ? (
         <EmptyContainer>
           <EmptyText>Henüz Favori Film Eklemediniz!</EmptyText>
