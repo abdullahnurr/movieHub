@@ -83,26 +83,8 @@ src/
 Abdullah NUR
 
 - LinkedIn: [Abdullah NUR](https://linkedin.com/in/abdullahnur)
-- GitHub: [@abdullahnur](https://github.com/abdullahnur)
-
-## 📄 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
-
----
+- GitHub: [@abdullahnurr](https://github.com/abdullahnur)
 
 ⭐️ Beğendiyseniz yıldızlamayı unutmayın!
 
-Bu README.md dosyasını projenizin kök dizinine ekleyebilirsiniz. Projenizi GitHub'a push etmeden önce:
 
-1. LinkedIn ve GitHub linklerinizi güncelleyin
-2. Varsa ekran görüntüleri ekleyin
-3. Projenizin gerçek repo URL'sini ekleyin
-4. Lisans dosyası oluşturun
-
-Commit mesajı önerisi:
-
-```bash
-git add README.md
-git commit -m "docs: add comprehensive README with setup instructions and project details"
-```
