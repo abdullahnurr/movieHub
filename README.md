@@ -1,6 +1,7 @@
 # 🎬 MovieHub
 
 Film keşif uygulaması, React Native ve TypeScript kullanılarak geliştirilmiş modern bir mobil uygulama.
+https://jsonfakery.com/movies/paginated bu linkten dataları çekiyoruz 
 
 ## 🌟 Özellikler
 
