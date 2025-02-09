@@ -1,4 +1,4 @@
-# 🎬 Movie Explorer
+# 🎬 MovieHub
 
 Film keşif uygulaması, React Native ve TypeScript kullanılarak geliştirilmiş modern bir mobil uygulama.
 
