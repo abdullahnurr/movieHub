@@ -7,6 +7,7 @@ import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDebouncedCallback } from "../hooks/useDebounce";
 import { useMovies } from "../context/MoviesContext";
+import { StyledList } from "../components/common/StyledList";
 
 const Container = styled.View`
   flex: 1;
@@ -20,10 +21,6 @@ const SearchInput = styled.TextInput`
   background-color: ${({ theme }) => theme.colors.button.background};
   margin: ${({ theme }) => theme.spacing.md}px;
   font-size: 16px;
-`;
-
-const MovieList = styled(FlatList)`
-  padding-vertical: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 type RootStackParamList = {
@@ -70,13 +67,12 @@ export const SearchScreen = ({ navigation }: Props) => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <MovieList
+      <StyledList
         data={filteredMovies}
         renderItem={({ item }) => (
           <MovieCard movie={item} onPress={handleMoviePress} />
         )}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={MovieList.defaultProps?.contentContainerStyle}
       />
     </Container>
   );

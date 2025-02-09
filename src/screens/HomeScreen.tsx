@@ -12,6 +12,8 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
 import { useToast } from "../context/ToastContext";
 import styled from "styled-components/native";
+import { StyledList } from "../components/common/StyledList";
+import { Loading } from "../components/common/Loading";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -89,21 +91,16 @@ export const HomeScreen = ({ navigation }: Props) => {
   };
 
   if (loading) {
-    return (
-      <LoadingContainer>
-        <StyledActivityIndicator size="large" color="#e91e63" />
-      </LoadingContainer>
-    );
+    return <Loading />;
   }
 
   return (
-    <MovieList
+    <StyledList
       data={movies}
       renderItem={({ item }) => (
         <MovieCard movie={item} onPress={handleMoviePress} />
       )}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={ListContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
