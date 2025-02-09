@@ -1,3 +1,31 @@
+import "styled-components";
+
+declare module "styled-components" {
+  export interface DefaultTheme {
+    colors: {
+      background: string;
+      primary: string;
+      text: {
+        primary: string;
+        secondary: string;
+      };
+    };
+    borderRadius: {
+      sm: number;
+      md: number;
+    };
+    spacing: {
+      xs: number;
+      sm: number;
+      md: number;
+      lg: number;
+    };
+    shadows: {
+      default: string;
+    };
+  }
+}
+
 export const theme = {
   colors: {
     primary: "#f5c518",
