@@ -1,6 +1,7 @@
 import styled from "styled-components/native";
 import type { Movie } from "../types/movie";
 import { useMovies } from "../context/MoviesContext";
+import { useToast } from "../context/ToastContext";
 
 const Card = styled.TouchableOpacity`
   flex-direction: row;
@@ -79,13 +80,20 @@ interface MovieCardProps {
 
 export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
+  const { showToast } = useToast();
   const isMovieFavorite = isFavorite(movie.id);
 
   const handleFavoritePress = async () => {
-    if (isMovieFavorite) {
-      await removeFromFavorites(movie.id);
-    } else {
-      await addToFavorites(movie);
+    try {
+      if (isMovieFavorite) {
+        await removeFromFavorites(movie.id);
+        showToast("Film favorilerden kaldırıldı", "info");
+      } else {
+        await addToFavorites(movie);
+        showToast("Film favorilere eklendi", "success");
+      }
+    } catch (error) {
+      showToast("Bir hata oluştu", "error");
     }
   };
 

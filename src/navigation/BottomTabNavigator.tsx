@@ -24,7 +24,7 @@ export const BottomTabNavigator = () => {
         options={{
           headerTransparent: true,
           headerTitle: "",
-          headerBackTitle: "",
+          headerBackTitle: "Geri Dön",
           headerTintColor: "#fff",
         }}
       />
@@ -39,6 +39,12 @@ const TabNavigator = () => {
         tabBarActiveTintColor: "#e91e63",
         tabBarInactiveTintColor: "gray",
         headerShown: false,
+        tabBarStyle: {
+          height: 60,
+          paddingBottom: 8,
+          paddingTop: 8,
+        },
+        safeAreaInsets: { bottom: 0 },
       }}
     >
       <Tab.Screen
@@ -48,6 +54,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <HomeIcon color={color} size={size} />
           ),
+          tabBarLabel: "Ana Sayfa",
         }}
       />
       <Tab.Screen
@@ -57,6 +64,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <SearchIcon color={color} size={size} />
           ),
+          tabBarLabel: "Arama",
         }}
       />
       <Tab.Screen
@@ -66,6 +74,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <ProfileIcon color={color} size={size} />
           ),
+          tabBarLabel: "Profil",
         }}
       />
     </Tab.Navigator>

@@ -11,6 +11,7 @@ import { getMovies } from "../services/movieService";
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
+import { useToast } from "../context/ToastContext";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -21,6 +22,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
 export const HomeScreen = ({ navigation }: Props) => {
   const { setMovies: setContextMovies } = useMovies();
+  const { showToast } = useToast();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -32,10 +34,13 @@ export const HomeScreen = ({ navigation }: Props) => {
       if (pageNumber === 1) {
         setMovies(response.data);
         setContextMovies(response.data);
+        showToast("Filmler başarıyla yüklendi", "success");
       } else {
         setMovies((prev) => [...prev, ...response.data]);
+        showToast("Daha fazla film yüklendi", "info");
       }
     } catch (error) {
+      showToast("Filmler yüklenirken bir hata oluştu", "error");
       console.error(error);
     } finally {
       setLoading(false);
@@ -50,6 +55,7 @@ export const HomeScreen = ({ navigation }: Props) => {
   const handleRefresh = () => {
     setRefreshing(true);
     setPage(1);
+    showToast("Yenileniyor...", "info");
     fetchMovies(1);
   };
 

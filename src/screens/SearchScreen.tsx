@@ -52,7 +52,7 @@ export const SearchScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <TextInput
         style={styles.searchInput}
-        placeholder="Search movies..."
+        placeholder="Film Ara..."
         value={searchQuery}
         onChangeText={handleQueryChange}
         autoCapitalize="none"

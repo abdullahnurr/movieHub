@@ -12,6 +12,7 @@ import {
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
+import { useToast } from "../context/ToastContext";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -24,6 +25,7 @@ export const MovieDetailScreen = ({ route }: Props) => {
   const { movie } = route.params;
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
   const isMovieFavorite = isFavorite(movie.id);
+  const { showToast } = useToast();
 
   const handleShare = async () => {
     try {
@@ -40,16 +42,26 @@ export const MovieDetailScreen = ({ route }: Props) => {
       );
 
       if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          console.log(`Shared via ${result.activityType}`);
-        } else {
-          console.log("Shared successfully");
-        }
+        showToast("Film başarıyla paylaşıldı", "success");
       } else if (result.action === Share.dismissedAction) {
         console.log("Share was dismissed");
       }
     } catch (error) {
-      console.error("Error sharing:", error);
+      showToast("Paylaşım sırasında bir hata oluştu", "error");
+    }
+  };
+
+  const handleFavorite = async () => {
+    try {
+      if (isMovieFavorite) {
+        await removeFromFavorites(movie.id);
+        showToast("Film favorilerden kaldırıldı", "info");
+      } else {
+        await addToFavorites(movie);
+        showToast("Film favorilere eklendi", "success");
+      }
+    } catch (error) {
+      showToast("Bir hata oluştu", "error");
     }
   };
 
@@ -70,11 +82,7 @@ export const MovieDetailScreen = ({ route }: Props) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton}
-              onPress={() =>
-                isMovieFavorite
-                  ? removeFromFavorites(movie.id)
-                  : addToFavorites(movie)
-              }
+              onPress={handleFavorite}
             >
               <Text style={styles.actionButtonIcon}>
                 {isMovieFavorite ? "❤️" : "🤍"}
