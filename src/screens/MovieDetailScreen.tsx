@@ -50,13 +50,21 @@ const MovieTitle = styled.Text`
 const ReleaseYear = styled.Text`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.text.secondary};
+  margin-bottom: ${({ theme }) => theme.spacing.lg}px;
+`;
+
+const OverviewTitle = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 const Overview = styled.Text`
   font-size: 16px;
   color: ${({ theme }) => theme.colors.text.primary};
   line-height: 24px;
-  margin-vertical: ${({ theme }) => theme.spacing.lg}px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg}px;
 `;
 
 const RatingContainer = styled.View`
@@ -138,13 +146,6 @@ const ActionButtonText = styled.Text`
   font-size: 14px;
   color: ${({ theme }) => theme.colors.text.primary};
   font-weight: 500;
-`;
-
-const OverviewTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colors.text.primary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
 `;
 
 const formatReleaseDate = (dateString: string) => {
@@ -229,16 +230,18 @@ export const MovieDetailScreen = ({ route }: Props) => {
             </ActionButton>
           </ActionButtons>
         </HeaderContainer>
-        <RatingContainer>
-          <Rating>⭐️ {movie.vote_average.toFixed(1)}</Rating>
-          <Votes>({movie.vote_count} votes)</Votes>
-        </RatingContainer>
-        <ReleaseYear>
-          Released: {formatReleaseDate(movie.release_date)}
-        </ReleaseYear>
-        <OverviewTitle>Overview</OverviewTitle>
+        <View style={{ marginBottom: theme.spacing.lg }}>
+          <RatingContainer>
+            <Rating>⭐️ {movie.vote_average.toFixed(1)}</Rating>
+            <Votes>({movie.vote_count} votes)</Votes>
+          </RatingContainer>
+          <ReleaseYear>
+            Yayınlanma Tarihi: {formatReleaseDate(movie.release_date)}
+          </ReleaseYear>
+        </View>
+        <OverviewTitle>Hakkında</OverviewTitle>
         <Overview>{movie.overview}</Overview>
-        <CastTitle>Cast</CastTitle>
+        <CastTitle>Oyuncular</CastTitle>
         <CastList horizontal showsHorizontalScrollIndicator={false}>
           {movie.casts.map((cast) => (
             <CastCard key={cast.id}>

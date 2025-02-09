@@ -5,7 +5,7 @@ export interface Cast {
   profile_path: string;
 }
 
-export interface Movie {
+export type Movie = {
   id: string;
   movie_id: number;
   original_title: string;
@@ -16,5 +16,10 @@ export interface Movie {
   vote_average: number;
   vote_count: number;
   popularity: number;
-  casts: Cast[];
-}
+  casts: Array<{
+    id: string;
+    name: string;
+    character: string;
+    profile_path: string;
+  }>;
+};
