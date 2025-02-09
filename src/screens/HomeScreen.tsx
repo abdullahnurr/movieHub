@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { MovieCard } from "../components/MovieCard";
+import { MovieCard } from "../components/MovieCard/MovieCard";
 import { getMovies } from "../services/movieService";
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";

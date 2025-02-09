@@ -14,7 +14,7 @@ import { MoviesProvider } from "./src/context/MoviesContext";
 import { ThemeProvider } from "styled-components/native";
 import { theme } from "./src/theme/theme";
 import { ToastProvider } from "./src/context/ToastContext";
-import { ErrorBoundary } from "./src/components/ErrorBoundary";
+import { ErrorBoundary } from "./src/components/ErrorBoundary/ErrorBoundary";
 
 function App(): React.JSX.Element {
   return (
