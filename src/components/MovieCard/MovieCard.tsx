@@ -3,6 +3,8 @@ import type { Movie } from "../../types/movie";
 import { useMovies } from "../../context/MoviesContext";
 import { useToast } from "../../context/ToastContext";
 import React from "react";
+import { StarIcon } from "../Icons";
+import { theme } from "../../theme/theme";
 
 const Card = styled.TouchableOpacity`
   flex-direction: row;
@@ -74,12 +76,6 @@ const FavoriteButton = styled.TouchableOpacity`
   align-items: center;
 `;
 
-const FavoriteIcon = styled.Text`
-  font-size: 20px;
-  color: ${({ theme, isFavorite }: { theme: any; isFavorite: boolean }) =>
-    isFavorite ? theme.colors.primary : "rgba(255, 255, 255, 0.8)"};
-`;
-
 interface MovieCardProps {
   movie: Movie;
   onPress: (movie: Movie) => void;
@@ -135,9 +131,13 @@ export const MovieCard = React.memo(({ movie, onPress }: MovieCardProps) => {
         <Overview numberOfLines={3}>{movie.overview}</Overview>
       </InfoContainer>
       <FavoriteButton onPress={handleFavoritePress}>
-        <FavoriteIcon isFavorite={isMovieFavorite}>
-          {isMovieFavorite ? "★" : "☆"}
-        </FavoriteIcon>
+        <StarIcon
+          size={20}
+          color={
+            isMovieFavorite ? theme.colors.primary : "rgba(255, 255, 255, 0.8)"
+          }
+          isFilled={isMovieFavorite}
+        />
       </FavoriteButton>
     </Card>
   );

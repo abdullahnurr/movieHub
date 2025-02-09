@@ -12,7 +12,8 @@ import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
 import { useToast } from "../context/ToastContext";
-import styled from "styled-components/native";
+import styled, { useTheme } from "styled-components/native";
+import { ShareIcon, StarIcon } from "../components/Icons";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -122,7 +123,7 @@ const ActionButtons = styled.View`
   gap: ${({ theme }) => theme.spacing.md}px;
 `;
 
-const ActionButton = styled.TouchableOpacity`
+const ActionButton = styled.TouchableOpacity<{ iconColor?: string }>`
   flex: 1;
   flex-direction: row;
   background-color: ${({ theme }) => theme.colors.button.background};
@@ -131,10 +132,6 @@ const ActionButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm}px;
-`;
-
-const ActionButtonIcon = styled.Text`
-  font-size: 18px;
 `;
 
 const ActionButtonText = styled.Text`
@@ -169,6 +166,7 @@ export const MovieDetailScreen = ({ route }: Props) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
   const isMovieFavorite = isFavorite(movie.id);
   const { showToast } = useToast();
+  const theme = useTheme();
 
   const handleShare = async () => {
     try {
@@ -216,13 +214,15 @@ export const MovieDetailScreen = ({ route }: Props) => {
           <MovieTitle>{movie.original_title}</MovieTitle>
           <ActionButtons>
             <ActionButton onPress={handleShare}>
-              <ActionButtonIcon>📤</ActionButtonIcon>
+              <ShareIcon size={24} color={theme.colors.text.primary} />
               <ActionButtonText>Share</ActionButtonText>
             </ActionButton>
             <ActionButton onPress={handleFavorite}>
-              <ActionButtonIcon>
-                {isMovieFavorite ? "❤️" : "🤍"}
-              </ActionButtonIcon>
+              <StarIcon
+                size={24}
+                color={theme.colors.text.primary}
+                isFilled={isMovieFavorite}
+              />
               <ActionButtonText>
                 {isMovieFavorite ? "Favorited" : "Add to Favorites"}
               </ActionButtonText>

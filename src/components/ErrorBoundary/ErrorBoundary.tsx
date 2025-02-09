@@ -55,12 +55,12 @@ export const ErrorBoundary: React.FC<Props> = ({ children }) => {
   if (error) {
     return (
       <ErrorContainer>
-        <ErrorTitle>Oops! Something went wrong</ErrorTitle>
+        <ErrorTitle>Hata! Bir şeyler ters gitti</ErrorTitle>
         <ErrorMessage>
-          {error.message || "An unexpected error occurred"}
+          {error.message || "Beklenmeyen bir hata oluştu"}
         </ErrorMessage>
         <RetryButton onPress={handleRetry}>
-          <RetryText>Try Again</RetryText>
+          <RetryText>Tekrar Dene</RetryText>
         </RetryButton>
       </ErrorContainer>
     );
