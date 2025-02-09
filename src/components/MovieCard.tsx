@@ -78,6 +78,20 @@ interface MovieCardProps {
   onPress: (movie: Movie) => void;
 }
 
+const formatReleaseDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      const [_, datePart] = dateString.split(", ");
+      const [month, day, year] = datePart.split("/");
+      return year;
+    }
+    return date.getFullYear().toString();
+  } catch {
+    return "N/A";
+  }
+};
+
 export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
   const { showToast } = useToast();
@@ -102,7 +116,7 @@ export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
       <Poster source={{ uri: movie.poster_path }} resizeMode="cover" />
       <InfoContainer>
         <Title numberOfLines={2}>{movie.original_title}</Title>
-        <ReleaseDate>{new Date(movie.release_date).getFullYear()}</ReleaseDate>
+        <ReleaseDate>{formatReleaseDate(movie.release_date)}</ReleaseDate>
         <RatingContainer>
           <Rating>⭐️ {movie.vote_average.toFixed(1)}</Rating>
           <Votes>({movie.vote_count} votes)</Votes>

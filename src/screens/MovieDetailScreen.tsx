@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   ScrollView,
-  StyleSheet,
   Dimensions,
   Share,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
 import { useToast } from "../context/ToastContext";
+import styled from "styled-components/native";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -20,6 +20,149 @@ type RootStackParamList = {
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "MovieDetail">;
+
+const ScrollContainer = styled.ScrollView`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const BackdropImage = styled.Image`
+  width: ${Dimensions.get("window").width}px;
+  height: 250px;
+`;
+
+const ContentContainer = styled.View`
+  padding: ${({ theme }) => theme.spacing.lg}px;
+  margin-top: -20px;
+  background-color: ${({ theme }) => theme.colors.background};
+  border-top-left-radius: ${({ theme }) => theme.borderRadius.lg}px;
+  border-top-right-radius: ${({ theme }) => theme.borderRadius.lg}px;
+`;
+
+const MovieTitle = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+const ReleaseYear = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const Overview = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.primary};
+  line-height: 24px;
+  margin-vertical: ${({ theme }) => theme.spacing.lg}px;
+`;
+
+const RatingContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const Rating = styled.Text`
+  font-size: 16px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const Votes = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  margin-left: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+const CastTitle = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const CastList = styled.ScrollView`
+  margin-top: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const CastCard = styled.View`
+  width: 100px;
+  margin-right: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const CastImage = styled.Image`
+  width: 100px;
+  height: 150px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm}px;
+  margin-bottom: ${({ theme }) => theme.spacing.xs}px;
+`;
+
+const CastName = styled.Text`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.text.primary};
+  text-align: center;
+`;
+
+const Character = styled.Text`
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+  text-align: center;
+`;
+
+const HeaderContainer = styled.View`
+  margin-bottom: ${({ theme }) => theme.spacing.lg}px;
+`;
+
+const ActionButtons = styled.View`
+  flex-direction: row;
+  margin-top: ${({ theme }) => theme.spacing.md}px;
+  gap: ${({ theme }) => theme.spacing.md}px;
+`;
+
+const ActionButton = styled.TouchableOpacity`
+  flex: 1;
+  flex-direction: row;
+  background-color: ${({ theme }) => theme.colors.button.background};
+  padding: ${({ theme }) => theme.spacing.md}px;
+  border-radius: ${({ theme }) => theme.borderRadius.sm}px;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+const ActionButtonIcon = styled.Text`
+  font-size: 18px;
+`;
+
+const ActionButtonText = styled.Text`
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: 500;
+`;
+
+const OverviewTitle = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm}px;
+`;
+
+const formatReleaseDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      const [_, datePart] = dateString.split(", ");
+      const [month, day, year] = datePart.split("/");
+      return `${month}/${day}/${year}`;
+    }
+    return date.toLocaleDateString();
+  } catch {
+    return "N/A";
+  }
+};
 
 export const MovieDetailScreen = ({ route }: Props) => {
   const { movie } = route.params;
@@ -66,169 +209,51 @@ export const MovieDetailScreen = ({ route }: Props) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Image
-        source={{ uri: movie.backdrop_path }}
-        style={styles.backdrop}
-        resizeMode="cover"
-      />
-      <View style={styles.contentContainer}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>{movie.original_title}</Text>
-          <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-              <Text style={styles.actionButtonIcon}>📤</Text>
-              <Text style={styles.actionButtonText}>Share</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={handleFavorite}
-            >
-              <Text style={styles.actionButtonIcon}>
+    <ScrollContainer>
+      <BackdropImage source={{ uri: movie.backdrop_path }} resizeMode="cover" />
+      <ContentContainer>
+        <HeaderContainer>
+          <MovieTitle>{movie.original_title}</MovieTitle>
+          <ActionButtons>
+            <ActionButton onPress={handleShare}>
+              <ActionButtonIcon>📤</ActionButtonIcon>
+              <ActionButtonText>Share</ActionButtonText>
+            </ActionButton>
+            <ActionButton onPress={handleFavorite}>
+              <ActionButtonIcon>
                 {isMovieFavorite ? "❤️" : "🤍"}
-              </Text>
-              <Text style={styles.actionButtonText}>
+              </ActionButtonIcon>
+              <ActionButtonText>
                 {isMovieFavorite ? "Favorited" : "Add to Favorites"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.rating}>⭐️ {movie.vote_average.toFixed(1)}</Text>
-          <Text style={styles.votes}>({movie.vote_count} votes)</Text>
-        </View>
-        <Text style={styles.releaseDate}>
-          Released: {new Date(movie.release_date).toLocaleDateString()}
-        </Text>
-        <Text style={styles.overviewTitle}>Overview</Text>
-        <Text style={styles.overview}>{movie.overview}</Text>
-
-        <Text style={styles.castTitle}>Cast</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              </ActionButtonText>
+            </ActionButton>
+          </ActionButtons>
+        </HeaderContainer>
+        <RatingContainer>
+          <Rating>⭐️ {movie.vote_average.toFixed(1)}</Rating>
+          <Votes>({movie.vote_count} votes)</Votes>
+        </RatingContainer>
+        <ReleaseYear>
+          Released: {formatReleaseDate(movie.release_date)}
+        </ReleaseYear>
+        <OverviewTitle>Overview</OverviewTitle>
+        <Overview>{movie.overview}</Overview>
+        <CastTitle>Cast</CastTitle>
+        <CastList horizontal showsHorizontalScrollIndicator={false}>
           {movie.casts.map((cast) => (
-            <View key={cast.id} style={styles.castContainer}>
-              <Image
+            <CastCard key={cast.id}>
+              <CastImage
                 source={{ uri: cast.profile_path }}
-                style={styles.castImage}
                 resizeMode="cover"
               />
-              <Text style={styles.castName} numberOfLines={2}>
-                {cast.name}
-              </Text>
-              <Text style={styles.character} numberOfLines={2}>
-                {cast.character}
-              </Text>
-            </View>
+              <CastName numberOfLines={2}>{cast.name}</CastName>
+              <Character numberOfLines={2}>{cast.character}</Character>
+            </CastCard>
           ))}
-        </ScrollView>
-      </View>
-    </ScrollView>
+        </CastList>
+      </ContentContainer>
+    </ScrollContainer>
   );
 };
 
 const { width } = Dimensions.get("window");
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  backdrop: {
-    width: width,
-    height: width * 0.5625, // 16:9 aspect ratio
-  },
-  contentContainer: {
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 8,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  rating: {
-    fontSize: 16,
-    color: "#f5c518",
-    fontWeight: "bold",
-  },
-  votes: {
-    fontSize: 14,
-    color: "#666",
-    marginLeft: 4,
-  },
-  releaseDate: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 16,
-  },
-  overviewTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 8,
-  },
-  overview: {
-    fontSize: 16,
-    color: "#333",
-    lineHeight: 24,
-    marginBottom: 16,
-  },
-  castTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 12,
-  },
-  castContainer: {
-    width: 100,
-    marginRight: 12,
-  },
-  castImage: {
-    width: 100,
-    height: 150,
-    borderRadius: 8,
-    marginBottom: 4,
-  },
-  castName: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#1a1a1a",
-    textAlign: "center",
-  },
-  character: {
-    fontSize: 12,
-    color: "#666",
-    textAlign: "center",
-  },
-  headerContainer: {
-    marginBottom: 16,
-  },
-  actionButtons: {
-    flexDirection: "row",
-    marginTop: 12,
-    gap: 12,
-  },
-  actionButton: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "#f5f5f5",
-    padding: 12,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  actionButtonIcon: {
-    fontSize: 18,
-  },
-  actionButtonText: {
-    fontSize: 14,
-    color: "#1a1a1a",
-    fontWeight: "500",
-  },
-});

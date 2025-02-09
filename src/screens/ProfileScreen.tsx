@@ -1,15 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { MovieCard } from "../components/MovieCard";
 import { useMovies } from "../context/MoviesContext";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { Movie } from "../types/movie";
+import styled from "styled-components/native";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -19,6 +14,33 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, "Profile">;
 
+const Container = styled.View`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const Title = styled.Text`
+  font-size: 24px;
+  font-weight: bold;
+  padding: ${({ theme }) => theme.spacing.lg}px;
+  color: ${({ theme }) => theme.colors.text.primary};
+`;
+
+const EmptyContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const EmptyText = styled.Text`
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.text.secondary};
+`;
+
+const MovieList = styled(FlatList)`
+  padding-vertical: ${({ theme }) => theme.spacing.sm}px;
+`;
+
 export const ProfileScreen = ({ navigation }: Props) => {
   const { favoriteMovies } = useMovies();
 
@@ -27,47 +49,21 @@ export const ProfileScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Favorite Movies</Text>
+    <Container>
+      <Title>Favorite Movies</Title>
       {favoriteMovies.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No favorite movies yet</Text>
-        </View>
+        <EmptyContainer>
+          <EmptyText>Henüz Favori Film Eklemediniz!</EmptyText>
+        </EmptyContainer>
       ) : (
-        <FlatList
+        <MovieList
           data={favoriteMovies}
           renderItem={({ item }) => (
             <MovieCard movie={item} onPress={handleMoviePress} />
           )}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContainer}
         />
       )}
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    padding: 16,
-    color: "#1a1a1a",
-  },
-  listContainer: {
-    paddingVertical: 8,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#666",
-  },
-});

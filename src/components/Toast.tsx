@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Animated, StyleSheet } from "react-native";
+import { Animated } from "react-native";
 import styled from "styled-components/native";
 
 const ToastContainer = styled(Animated.View)`

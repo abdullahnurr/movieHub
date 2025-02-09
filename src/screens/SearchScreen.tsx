@@ -1,17 +1,30 @@
 import React, { useState } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { View, TextInput, FlatList } from "react-native";
+import styled from "styled-components/native";
 import { MovieCard } from "../components/MovieCard";
 import { searchMovies } from "../services/movieService";
 import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useDebouncedCallback } from "../hooks/useDebounce";
 import { useMovies } from "../context/MoviesContext";
+
+const Container = styled.View`
+  flex: 1;
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const SearchInput = styled.TextInput`
+  height: 50px;
+  border-radius: 25px;
+  padding-horizontal: 20px;
+  background-color: ${({ theme }) => theme.colors.button.background};
+  margin: ${({ theme }) => theme.spacing.md}px;
+  font-size: 16px;
+`;
+
+const MovieList = styled(FlatList)`
+  padding-vertical: ${({ theme }) => theme.spacing.sm}px;
+`;
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -49,45 +62,22 @@ export const SearchScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
+    <Container>
+      <SearchInput
         placeholder="Film Ara..."
         value={searchQuery}
         onChangeText={handleQueryChange}
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <FlatList
+      <MovieList
         data={filteredMovies}
         renderItem={({ item }) => (
           <MovieCard movie={item} onPress={handleMoviePress} />
         )}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={MovieList.defaultProps?.contentContainerStyle}
       />
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-  searchInput: {
-    height: 50,
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    backgroundColor: "#f5f5f5",
-    marginHorizontal: 16,
-    marginVertical: 16,
-    fontSize: 16,
-  },
-  loader: {
-    marginTop: 20,
-  },
-  listContainer: {
-    paddingVertical: 8,
-  },
-});

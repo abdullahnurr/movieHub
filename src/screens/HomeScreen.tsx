@@ -3,7 +3,6 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  StyleSheet,
   RefreshControl,
 } from "react-native";
 import { MovieCard } from "../components/MovieCard";
@@ -12,6 +11,7 @@ import type { Movie } from "../types/movie";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovies } from "../context/MoviesContext";
 import { useToast } from "../context/ToastContext";
+import styled from "styled-components/native";
 
 type RootStackParamList = {
   MovieDetail: { movie: Movie };
@@ -19,6 +19,25 @@ type RootStackParamList = {
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+
+const LoadingContainer = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const StyledActivityIndicator = styled(ActivityIndicator)`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const MovieList = styled(FlatList)`
+  background-color: ${({ theme }) => theme.colors.background};
+`;
+
+const ListContainer = styled.View`
+  padding-vertical: ${({ theme }) => theme.spacing.sm}px;
+`;
 
 export const HomeScreen = ({ navigation }: Props) => {
   const { setMovies: setContextMovies } = useMovies();
@@ -71,20 +90,20 @@ export const HomeScreen = ({ navigation }: Props) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#e91e63" />
-      </View>
+      <LoadingContainer>
+        <StyledActivityIndicator size="large" color="#e91e63" />
+      </LoadingContainer>
     );
   }
 
   return (
-    <FlatList
+    <MovieList
       data={movies}
       renderItem={({ item }) => (
         <MovieCard movie={item} onPress={handleMoviePress} />
       )}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.listContainer}
+      contentContainerStyle={ListContainer}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }
@@ -93,14 +112,3 @@ export const HomeScreen = ({ navigation }: Props) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  listContainer: {
-    paddingVertical: 16,
-  },
-});
