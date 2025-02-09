@@ -73,7 +73,10 @@ export const ProfileScreen = ({ navigation }: Props) => {
     <Container>
       <ProfileCard>
         <ProfileName>Abdullah NUR</ProfileName>
-        <ProfileRole>Etenra Technology{"\n"}React Native Developer</ProfileRole>
+        <ProfileRole>
+          Eterna Teknoloji
+          {"\n"}React Native Developer
+        </ProfileRole>
       </ProfileCard>
       <SectionTitle>Favorite Movies</SectionTitle>
       {favoriteMovies.length === 0 ? (
