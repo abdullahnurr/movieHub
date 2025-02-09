@@ -38,7 +38,7 @@ cd MovieExplorer
 2. Bağımlılıkları yükleyin
 
 ```bash
-yarn install
+npm install
 ```
 
 3. iOS için pod kurulumu
@@ -51,10 +51,10 @@ cd ios && pod install && cd ..
 
 ```bash
 # iOS
-yarn ios
+npm ios
 
 # Android
-yarn android
+npm android
 ```
 
 ## 📱 Ekranlar
