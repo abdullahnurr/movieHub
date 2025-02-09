@@ -58,6 +58,9 @@ export const SearchScreen = ({ navigation }: Props) => {
     navigation.navigate("MovieDetail", { movie });
   };
 
+  // Sadece keyExtractor'ı dışarı alalım
+  const keyExtractor = (item: Movie) => item.id;
+
   return (
     <Container>
       <SearchInput
@@ -66,13 +69,15 @@ export const SearchScreen = ({ navigation }: Props) => {
         onChangeText={handleQueryChange}
         autoCapitalize="none"
         autoCorrect={false}
+        // Performans için ekleyelim
+        inputMode="search"
       />
       <StyledList
         data={filteredMovies}
         renderItem={({ item }) => (
           <MovieCard movie={item} onPress={handleMoviePress} />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={keyExtractor}
       />
     </Container>
   );

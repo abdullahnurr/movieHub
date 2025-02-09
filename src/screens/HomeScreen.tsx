@@ -90,6 +90,9 @@ export const HomeScreen = ({ navigation }: Props) => {
     navigation.navigate("MovieDetail", { movie });
   };
 
+  // Sadece keyExtractor'ı dışarı alalım
+  const keyExtractor = (item: Movie) => item.id;
+
   if (loading) {
     return <Loading />;
   }
@@ -100,7 +103,7 @@ export const HomeScreen = ({ navigation }: Props) => {
       renderItem={({ item }) => (
         <MovieCard movie={item} onPress={handleMoviePress} />
       )}
-      keyExtractor={(item) => item.id}
+      keyExtractor={keyExtractor}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
       }

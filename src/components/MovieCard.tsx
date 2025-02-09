@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import type { Movie } from "../types/movie";
 import { useMovies } from "../context/MoviesContext";
 import { useToast } from "../context/ToastContext";
+import React from "react";
 
 const Card = styled.TouchableOpacity`
   flex-direction: row;
@@ -92,7 +93,7 @@ const formatReleaseDate = (dateString: string) => {
   }
 };
 
-export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
+export const MovieCard = React.memo(({ movie, onPress }: MovieCardProps) => {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovies();
   const { showToast } = useToast();
   const isMovieFavorite = isFavorite(movie.id);
@@ -128,4 +129,5 @@ export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
       </FavoriteButton>
     </Card>
   );
-};
+});
+MovieCard.displayName = "MovieCard";
